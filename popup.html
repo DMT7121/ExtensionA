@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Máy tính thuế VAT</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <img src="icon.png" alt="Logo" class="header-logo">
+            <h1 class="header-title">Máy tính thuế VAT</h1>
+        </div>
+        <button id="header-settings-btn" class="header-settings-btn" title="Cài đặt">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        </button>
+    </header>
+
+    <!-- Tab Bar -->
+    <nav class="tabs-container">
+        <div class="tab active" data-tab="calc">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+            <span class="tab-label">Tính toán</span>
+        </div>
+        <div class="tab" data-tab="history">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span class="tab-label">Lịch sử</span>
+        </div>
+        <div class="tab" data-tab="vietqr">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            <span class="tab-label">Tạo QR</span>
+        </div>
+        <div class="tab" data-tab="tts">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            <span class="tab-label">TTS</span>
+        </div>
+        <div class="tab" data-tab="tools">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            <span class="tab-label">Tiện ích</span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Tab 1: Tính toán -->
+        <div id="tab-calc" class="tab-content" style="display: block;">
+            <div class="card">
+                <div class="form-group">
+                    <div class="label-row">
+                        <span class="label-text">Chọn phép tính</span>
+                        <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    </div>
+                    <select id="calc-type" class="custom-select">
+                        <option value="1">Giá chưa thuế → Giá đã thuế</option>
+                        <option value="2">Giá đã thuế → Giá chưa thuế</option>
+                        <option value="3">Tiền thuế → Giá chưa thuế</option>
+                        <option value="4">Tiền thuế → Giá đã thuế</option>
+                    </select>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 12px;">
+                    <div class="form-group">
+                        <div class="label-row">
+                            <span class="label-text" id="label-input-1">Giá chưa thuế (VNĐ)</span>
+                        </div>
+                        <div class="input-wrapper">
+                            <input type="text" id="input-1" class="custom-input" placeholder="0" autocomplete="off">
+                            <span class="input-unit">đ</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="label-row">
+                            <span class="label-text">Thuế suất (%)</span>
+                        </div>
+                        <div class="input-wrapper">
+                            <input type="number" id="input-2" class="custom-input" value="10">
+                            <span class="input-unit">%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="presets-row">
+                    <button class="preset-btn" data-val="5">5%</button>
+                    <button class="preset-btn active" data-val="8">8%</button>
+                    <button class="preset-btn" data-val="10">10%</button>
+                    <button class="preset-btn" data-val="custom">Tùy chỉnh</button>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <div class="result-label" id="result-label-main">Giá đã thuế</div>
+                <button class="copy-icon-btn" id="copy-btn" title="Sao chép">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                </button>
+                <div class="result-main" id="result-main">0 đ</div>
+                <div class="result-divider"></div>
+                <div class="result-sub" id="result-sub">Tiền thuế: <span>0 đ</span></div>
+            </div>
+
+            <div class="words-card">
+                <div style="flex: 1;">
+                    <div class="words-label">Bằng chữ:</div>
+                    <div class="words-text" id="result-words">Không đồng</div>
+                </div>
+                <button class="speaker-btn" title="Đọc kết quả">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                </button>
+            </div>
+            
+            <button id="btn-generate-qr" class="btn-primary" style="margin-top: 20px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px; height:20px;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Tạo nhanh VietQR
+            </button>
+        </div>
+
+        <!-- Tab 2: Lịch sử -->
+        <div id="tab-history" class="tab-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 class="history-title">Lịch sử tính toán</h2>
+                <button id="clear-history" style="background: none; border: none; color: var(--accent-red); font-size: 13px; font-weight: 600; cursor: pointer;">Xóa hết</button>
+            </div>
+            <div id="history-list">
+                <!-- History items injected here -->
+            </div>
+        </div>
+
+        <!-- Tab 3: Tạo QR -->
+        <div id="tab-vietqr" class="tab-content">
+            <!-- Compact View Card (Visible when form is collapsed) -->
+            <div id="qr-compact-view" class="card" style="display: none; padding: 12px; cursor: pointer; border: 1px dashed var(--primary-color);">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 40px; height: 40px; background: var(--primary-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--primary-color);">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                        </div>
+                        <div>
+                            <div id="qr-compact-bank" style="font-weight: 700; color: var(--primary-color); font-size: 14px;">Chưa chọn ngân hàng</div>
+                            <div id="qr-compact-acc" style="font-size: 12px; color: var(--text-sub);">Nhấn để chỉnh sửa thông tin</div>
+                        </div>
+                    </div>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+            </div>
+
+            <!-- Full Form (Collapsible) -->
+            <div id="qr-form-container" class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <div class="section-title" style="display:flex; align-items:center; gap:8px; margin-bottom:0;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                        Tạo QR ngân hàng
+                    </div>
+                    <button id="qr-collapse-btn" style="background:none; border:none; color:var(--primary-color); cursor:pointer; padding:4px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+                    </button>
+                </div>
+
+                <div class="form-group">
+                    <label class="label-text" style="display:block; margin-bottom:8px;">Ngân hàng</label>
+                    <select id="qr-bank" class="custom-select">
+                        <option value="VCB">Vietcombank</option>
+                        <option value="TCB">Techcombank</option>
+                        <option value="MB">MBBank</option>
+                        <option value="BIDV">BIDV</option>
+                        <option value="ICB">VietinBank</option>
+                        <option value="ACB">ACB</option>
+                        <option value="TPB">TPBank</option>
+                        <option value="VPB">VPBank</option>
+                        <option value="SHB">SHB</option>
+                        <option value="STB">Sacombank</option>
+                        <option value="HDB">HDBank</option>
+                        <option value="VAB">VietABank</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="label-text" style="display:block; margin-bottom:8px;">Số tài khoản</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="qr-acc" class="custom-input" placeholder="Nhập số tài khoản...">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="label-text" style="display:block; margin-bottom:8px;">Chủ tài khoản</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="qr-name" class="custom-input" placeholder="Tên chủ tài khoản (không dấu)...">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="label-text" style="display:block; margin-bottom:8px;">Số tiền</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="qr-amount" class="custom-input" placeholder="0">
+                        <span class="input-unit">đ</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="label-text" style="display:block; margin-bottom:8px;">Nội dung</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="qr-content" class="custom-input" placeholder="Nội dung chuyển khoản...">
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px;">
+                    <button id="qr-clear-btn" class="btn-secondary">Xóa trắng</button>
+                    <button id="qr-generate-btn" class="btn-primary">Tạo QR</button>
+                </div>
+                <button id="qr-save-template" class="btn-secondary" style="margin-top:12px; width:100%;">Lưu mẫu thông tin</button>
+            </div>
+
+            <!-- QR Result Display -->
+            <div id="qr-result-container" class="qr-result-card" style="display: none;">
+                <div class="section-title">Mã QR chuyển khoản</div>
+                <div id="qr-result-img-container">
+                    <img id="qr-result-img" src="" alt="VietQR" class="qr-code-img">
+                </div>
+                <div id="qr-result-info" style="font-size: 14px; margin-bottom: 20px; line-height: 1.6;">
+                    <!-- QR info injected here -->
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <button id="qr-download-btn" class="btn-secondary" style="padding: 10px; font-size: 13px;">Tải xuống</button>
+                    <button id="qr-share-btn" class="btn-secondary" style="padding: 10px; font-size: 13px;">Chia sẻ</button>
+                </div>
+            </div>
+
+            <div id="qr-saved-section" style="margin-top: 20px;">
+                <div class="section-title">Thông tin đã lưu</div>
+                <div id="qr-saved-list">
+                    <!-- Saved QR templates injected here -->
+                    <div style="text-align: center; color: var(--text-sub); padding: 20px; font-size: 13px;">Chưa có mẫu nào được lưu</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 4: TTS -->
+        <div id="tab-tts" class="tab-content">
+            <h2 class="section-title" style="font-size: 16px; margin-bottom: 4px;">CHUYỂN TEXT THÀNH GIỌNG NÓI</h2>
+            <p style="font-size: 12px; color: var(--text-sub); margin-bottom: 20px;">Nhập nội dung để tạo âm thanh tức thì</p>
+
+            <div class="card">
+                <!-- Special Template Toggle -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding: 10px; background: var(--bg-color); border-radius: 8px;">
+                    <span style="font-size: 13px; font-weight: 600;">Mẫu thông báo dời xe</span>
+                    <label class="switch">
+                        <input type="checkbox" id="tts-mode-toggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <!-- Template Input (License Plate) -->
+                <div id="tts-template-input" class="form-group" style="display: none;">
+                    <label class="label-text" style="display:block; margin-bottom:8px;">Biển số xe</label>
+                    <input type="text" id="tts-plate-input" class="custom-input" placeholder="Ví dụ: 30A-123.45">
+                    <p style="font-size: 11px; color: var(--text-sub); margin-top: 8px;">Nội dung sẽ tự động điền vào mẫu dời xe của nhà hàng.</p>
+                </div>
+
+                <!-- Free Text Input -->
+                <div id="tts-free-input" class="form-group">
+                    <label class="label-text" style="display:block; margin-bottom:8px;">Nội dung văn bản</label>
+                    <textarea id="tts-text-input" class="custom-input tts-textarea" placeholder="Nhập nội dung cần đọc..."></textarea>
+                    <div class="char-counter"><span id="tts-char-count">0</span>/500</div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <select id="tts-voice" class="custom-select" style="font-size: 13px;">
+                            <option value="nu-bac">Nữ miền Bắc</option>
+                            <option value="nam-bac">Nam miền Bắc</option>
+                            <option value="nu-nam">Nữ miền Nam</option>
+                            <option value="nam-nam">Nam miền Nam</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <select id="tts-speed" class="custom-select" style="font-size: 13px;">
+                            <option value="1.0">Tốc độ: 1.0x</option>
+                            <option value="0.8">Tốc độ: 0.8x</option>
+                            <option value="1.2">Tốc độ: 1.2x</option>
+                            <option value="1.5">Tốc độ: 1.5x</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button id="tts-convert-btn" class="btn-primary">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+                    Chuyển đổi
+                </button>
+            </div>
+
+            <!-- TTS Result Card -->
+            <div id="tts-result-container" class="audio-player-card" style="display: none;">
+                <div class="section-title" style="color: var(--primary-color); font-size: 12px;">Âm thanh đã tạo</div>
+                <div class="audio-controls">
+                    <button class="play-btn" id="tts-play-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                    </button>
+                    <div class="progress-bar">
+                        <div class="progress-filled" id="tts-progress"></div>
+                    </div>
+                    <span id="tts-duration" style="font-size: 11px; font-weight: 600; color: var(--primary-color);">00:00 / 00:00</span>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px;">
+                    <button class="btn-secondary" style="padding: 8px; font-size: 12px; background: white;">Tải xuống</button>
+                    <button class="btn-secondary" style="padding: 8px; font-size: 12px; background: white;">Lưu</button>
+                </div>
+            </div>
+
+            <!-- TTS Config Warning -->
+            <div class="card" style="padding: 12px; border: 1px solid var(--primary-light); background: var(--primary-light); display: flex; align-items: center; gap: 12px; margin-top: 20px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-color);"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <div style="flex: 1; font-size: 12px; font-weight: 500; color: var(--primary-color);">
+                    Cần cấu hình API trong mục Cài đặt để sử dụng TTS nâng cao.
+                </div>
+                <button id="tts-go-settings" style="background: none; border: none; color: var(--primary-color); font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                    Mở <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+            </div>
+
+            <div style="margin-top: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <span class="section-title" style="margin-bottom:0;">Mẫu gần đây</span>
+                    <button style="background: none; border: none; color: var(--primary-color); font-size: 12px; font-weight: 600; cursor: pointer;">Xem tất cả <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+                </div>
+                <div id="tts-history-list">
+                    <!-- TTS history items here -->
+                    <div style="text-align: center; color: var(--text-sub); padding: 20px; font-size: 13px;">Chưa có lịch sử chuyển đổi</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 5: Tiện ích -->
+        <div id="tab-tools" class="tab-content">
+            <div id="tools-main">
+                <div class="util-card" data-tool="multitax">
+                    <div class="util-icon" style="background: #EBF5FF; color: #3B82F6;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    </div>
+                    <div class="util-info">
+                        <div class="util-title">Tính thuế nhiều lớp</div>
+                        <div class="util-sub">Hỗ trợ tính thêm thuế TTĐB, thuế NK</div>
+                    </div>
+                    <svg class="util-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
+
+                <div class="util-card" data-tool="currency">
+                    <div class="util-icon" style="background: #ECFDF5; color: #10B981;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    </div>
+                    <div class="util-info">
+                        <div class="util-title">Chuyển đổi ngoại tệ</div>
+                        <div class="util-sub">Quy đổi tiền thuế sang VND theo tỷ giá</div>
+                    </div>
+                    <svg class="util-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
+
+                <div class="util-card" data-tool="mst">
+                    <div class="util-icon" style="background: #FFF7ED; color: #F59E0B;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    </div>
+                    <div class="util-info">
+                        <div class="util-title">Tra cứu mã số thuế</div>
+                        <div class="util-sub">Kiểm tra thông tin DN, địa chỉ</div>
+                    </div>
+                    <svg class="util-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
+
+                <div class="util-card" data-tool="calculator">
+                    <div class="util-icon" style="background: #FDF2F8; color: #EC4899;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="14"/><line x1="16" y1="18" x2="16" y2="18"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="12" y1="18" x2="12" y2="18"/><line x1="8" y1="14" x2="8" y2="14"/><line x1="8" y1="18" x2="8" y2="18"/><line x1="12" y1="10" x2="12" y2="10"/><line x1="16" y1="10" x2="16" y2="10"/><line x1="8" y1="10" x2="8" y2="10"/></svg>
+                    </div>
+                    <div class="util-info">
+                        <div class="util-title">Máy tính bỏ túi</div>
+                        <div class="util-sub">Tính toán nhanh các phép tính cơ bản</div>
+                    </div>
+                    <svg class="util-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
+
+                <div class="util-card" id="tool-float-btn">
+                    <div class="util-icon" style="background: #F5F3FF; color: #8B5CF6;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                    </div>
+                    <div class="util-info">
+                        <div class="util-title">Cửa sổ nổi (Floating)</div>
+                        <div class="util-sub">Ghim máy tính ở cửa sổ riêng biệt</div>
+                    </div>
+                    <svg class="util-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
+
+                <div class="util-card" id="util-settings-card">
+                    <div class="util-icon" style="background: #F1F5F9; color: #475569;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    </div>
+                    <div class="util-info">
+                        <div class="util-title">Cài đặt</div>
+                        <div class="util-sub">Tùy chọn định dạng số, thuế suất mặc định</div>
+                    </div>
+                    <svg class="util-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
+            </div>
+
+            <!-- Tool Subview: Multi Tax -->
+            <div id="tool-multitax" class="tool-subview" style="display: none;">
+                <div class="subview-header">
+                    <button class="back-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+                    <span class="subview-title">Tính thuế nhiều lớp</span>
+                </div>
+                <div class="card">
+                    <div class="form-group">
+                        <label class="label-text">Giá trị gốc (VNĐ)</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="mt-price" class="custom-input" placeholder="0">
+                            <span class="input-unit">đ</span>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+                        <div class="form-group">
+                            <label class="label-text">Thuế NK</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="mt-tax-nk" class="custom-input" value="0">
+                                <span class="input-unit">%</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="label-text">TTĐB</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="mt-tax-ttdb" class="custom-input" value="0">
+                                <span class="input-unit">%</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="label-text">VAT</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="mt-tax-vat" class="custom-input" value="10">
+                                <span class="input-unit">%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="result-card">
+                    <div class="result-label">Tổng cộng sau thuế</div>
+                    <div class="result-main" id="mt-res-total">0 đ</div>
+                    <div class="result-divider"></div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; font-size: 11px;">
+                        <div>NK: <span id="mt-res-nk" style="color:var(--primary-color); font-weight:700;">0 đ</span></div>
+                        <div>TTĐB: <span id="mt-res-ttdb" style="color:var(--primary-color); font-weight:700;">0 đ</span></div>
+                        <div>VAT: <span id="mt-res-vat" style="color:var(--primary-color); font-weight:700;">0 đ</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tool Subview: Currency -->
+            <div id="tool-currency" class="tool-subview" style="display: none;">
+                <div class="subview-header">
+                    <button class="back-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+                    <span class="subview-title">Chuyển đổi ngoại tệ</span>
+                </div>
+                <div class="card">
+                    <div class="form-group">
+                        <label class="label-text">Số tiền</label>
+                        <input type="text" id="cur-amount" class="custom-input" placeholder="0">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: center;">
+                        <select id="cur-from" class="custom-select">
+                            <option value="USD">USD</option>
+                            <option value="VND">VND</option>
+                            <option value="EUR">EUR</option>
+                            <option value="JPY">JPY</option>
+                        </select>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                        <select id="cur-to" class="custom-select">
+                            <option value="VND">VND</option>
+                            <option value="USD">USD</option>
+                            <option value="EUR">EUR</option>
+                            <option value="JPY">JPY</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="result-card">
+                    <div class="result-label">Kết quả quy đổi</div>
+                    <div class="result-main" id="cur-result">0 VND</div>
+                    <div id="cur-rate-info" style="font-size: 11px; color: var(--text-sub); margin-top: 8px;">Đang tải tỷ giá...</div>
+                </div>
+            </div>
+
+            <!-- Tool Subview: MST -->
+            <div id="tool-mst" class="tool-subview" style="display: none;">
+                <div class="subview-header">
+                    <button class="back-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+                    <span class="subview-title">Tra cứu mã số thuế</span>
+                </div>
+                <div class="card">
+                    <div class="form-group">
+                        <label class="label-text">Mã số thuế / Tên công ty</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="mst-input" class="custom-input" placeholder="Nhập MST hoặc tên...">
+                        </div>
+                    </div>
+                    <button id="mst-search-btn" class="btn-primary">Tra cứu ngay</button>
+                </div>
+                <div id="mst-result" class="card" style="font-size: 13px; line-height: 1.6;">
+                    <div style="text-align: center; color: var(--text-sub);">Nhập thông tin để tra cứu</div>
+                </div>
+            </div>
+
+            <!-- Tool Subview: Calculator -->
+            <div id="tool-calculator" class="tool-subview" style="display: none;">
+                <div class="subview-header">
+                    <button class="back-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+                    <span class="subview-title">Máy tính bỏ túi</span>
+                </div>
+                <!-- Mini calculator UI would go here or be injected -->
+                <div class="card" style="padding: 10px;">
+                    <div style="background: var(--bg-color); padding: 16px; border-radius: 8px; text-align: right; font-size: 24px; font-weight: 700; margin-bottom: 10px;" id="pocket-calc-display">0</div>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;" id="pocket-calc-buttons">
+                        <!-- Buttons injected or defined here -->
+                        <button class="calc-btn op" data-val="C" style="background:#FEE2E2; color:#EF4444; border:none; padding:12px; border-radius:8px; font-weight:700;">C</button>
+                        <button class="calc-btn op" data-val="back" style="background:#F1F5F9; padding:12px; border:none; border-radius:8px; font-weight:700;">⌫</button>
+                        <button class="calc-btn op" data-val="/" style="background:#F1F5F9; padding:12px; border:none; border-radius:8px; font-weight:700;">÷</button>
+                        <button class="calc-btn op" data-val="*" style="background:#F1F5F9; padding:12px; border:none; border-radius:8px; font-weight:700;">×</button>
+                        
+                        <button class="calc-btn" data-val="7" style="background:#F8F9FA; padding:12px; border:none; border-radius:8px; font-weight:600;">7</button>
+                        <button class="calc-btn" data-val="8" style="background:#F8F9FA; padding:12px; border:none; border-radius:8px; font-weight:600;">8</button>
+                        <button class="calc-btn" data-val="9" style="background:#F8F9FA; padding:12px; border:none; border-radius:8px; font-weight:600;">9</button>
+                        <button class="calc-btn op" data-val="-" style="background:#F1F5F9; padding:12px; border:none; border-radius:8px; font-weight:700;">-</button>
+                        
+                        <button class="calc-btn" data-val="4" style="background:#F8F9FA; padding:12px; border:none; border-radius:8px; font-weight:600;">4</button>
+                        <button class="calc-btn" data-val="5" style="background:#F8F9FA; padding:12px; border:none; border-radius:8px; font-weight:600;">5</button>
+                        <button class="calc-btn" data-val="6" style="background:#F8F9FA; padding:12px; border:none; border-radius:8px; font-weight:600;">6</button>
+                        <button class="calc-btn op" data-val="+" style="background:#F1F5F9; padding:12px; border:none; border-radius:8px; font-weight:700;">+</button>
+                        
+                        <button class="calc-btn" data-val="1" style="background:#F8F9FA; padding:12px; border:none; border-radius:8px; font-weight:600;">1</button>
+                        <button class="calc-btn" data-val="2" style="background:#F8F9FA; padding:12px; border:none; border-radius:8px; font-weight:600;">2</button>
+                        <button class="calc-btn" data-val="3" style="background:#F8F9FA; padding:12px; border:none; border-radius:8px; font-weight:600;">3</button>
+                        <button class="calc-btn op" data-val="=" style="grid-row: span 2; background:var(--primary-color); color:white; border:none; border-radius:8px; font-weight:700;">=</button>
+                        
+                        <button class="calc-btn" data-val="0" style="grid-column: span 2; background:#F8F9FA; padding:12px; border:none; border-radius:8px; font-weight:600;">0</button>
+                        <button class="calc-btn" data-val="." style="background:#F8F9FA; padding:12px; border:none; border-radius:8px; font-weight:600;">.</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tool Subview: Settings -->
+            <div id="tool-settings" class="tool-subview" style="display: none;">
+                <div class="subview-header">
+                    <button class="back-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+                    <span class="subview-title">Cài đặt</span>
+                </div>
+
+                <div class="settings-section">
+                    <div class="section-title">Thiết lập chung</div>
+                    <div class="card" style="padding: 16px;">
+                        <div class="form-group">
+                            <label class="label-text">Thuế suất mặc định (%)</label>
+                            <select id="set-default-tax" class="custom-select">
+                                <option value="0">0%</option>
+                                <option value="5">5%</option>
+                                <option value="8">8%</option>
+                                <option value="10">10%</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label class="label-text">Định dạng số</label>
+                            <select id="set-number-format" class="custom-select">
+                                <option value="dot">Dấu chấm (1.000.000)</option>
+                                <option value="comma">Dấu phẩy (1,000,000)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <div class="section-title">Cấu hình API TTS</div>
+                    <div class="card" style="padding: 16px;">
+                        <div class="form-group">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <label class="label-text">Nhà cung cấp</label>
+                                <a id="get-api-key-link" href="https://console.cloud.google.com/apis/library/texttospeech.googleapis.com" target="_blank" style="font-size: 11px; font-weight: 700; color: var(--primary-color); text-decoration: none; background: var(--primary-light); padding: 4px 8px; border-radius: 4px;">Lấy key miễn phí</a>
+                            </div>
+                            <select id="set-tts-provider" class="custom-select">
+                                <option value="google">Google Cloud TTS</option>
+                                <option value="azure">Azure AI Speech</option>
+                                <option value="fpt">FPT AI TTS</option>
+                                <option value="viettel">Viettel AI</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="label-text">API Key</label>
+                            <input type="password" id="set-tts-key" class="custom-input" placeholder="Nhập API Key...">
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <button id="test-tts-api" class="btn-secondary" style="padding: 10px; font-size: 13px;">Kiểm tra API</button>
+                            <button id="save-tts-config" class="btn-primary" style="padding: 10px; font-size: 13px;">Lưu cấu hình</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <div class="section-title">Mẫu TTS đặc thù</div>
+                    <div class="card" style="padding: 16px;">
+                        <div class="form-group">
+                            <label class="label-text">Mẫu thông báo dời xe</label>
+                            <textarea id="set-tts-template" class="custom-input" style="min-height: 80px; font-size: 13px;">Xin thông báo: Quý khách có xe mang biển số [Biển số xe], vui lòng gặp bảo vệ để di chuyển xe. Xin cảm ơn và xin lỗi vì sự bất tiện này!</textarea>
+                            <div style="margin-top: 8px;">
+                                <span class="input-unit" style="position:static; font-size: 11px;">[Biển số xe]</span>
+                                <span style="font-size: 11px; color: var(--text-sub); margin-left: 8px;">(Thẻ biến số xe)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <button id="save-settings" class="btn-primary" style="margin-bottom: 20px;">Lưu tất cả thay đổi</button>
+                
+                <div style="font-size: 12px; color: var(--text-sub); text-align: center; margin-bottom: 20px;">
+                    Phiên bản 3.0.0 • Phát triển bởi DMT
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <span>Đã sao chép!</span>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

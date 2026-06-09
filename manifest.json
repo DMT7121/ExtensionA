@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "Máy tính thuế VAT",
+  "version": "2.1",
+  "description": "Tiện ích tính toán thuế VAT nhanh chóng, tích hợp đọc số thành chữ, tra cứu MST và lịch sử tính toán.",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Máy tính thuế VAT",
+    "default_icon": "icon.png"
+  },
+  "icons": {
+    "16": "icon.png",
+    "32": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  },
+  "permissions": [
+    "storage",
+    "contextMenus",
+    "scripting",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://api.vietqr.io/*",
+    "https://api.exchangerate-api.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}

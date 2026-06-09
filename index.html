@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tool Tính Thuế Ngược</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+                        <line x1="8" y1="6" x2="16" y2="6"></line>
+                        <line x1="16" y1="10" x2="16" y2="10"></line>
+                        <line x1="12" y1="10" x2="12" y2="10"></line>
+                        <line x1="8" y1="10" x2="8" y2="10"></line>
+                        <line x1="16" y1="14" x2="16" y2="14"></line>
+                        <line x1="12" y1="14" x2="12" y2="14"></line>
+                        <line x1="8" y1="14" x2="8" y2="14"></line>
+                        <line x1="16" y1="18" x2="16" y2="18"></line>
+                        <line x1="12" y1="18" x2="12" y2="18"></line>
+                        <line x1="8" y1="18" x2="8" y2="18"></line>
+                    </svg>
+                </div>
+                <div class="header-title">
+                    <h1>TOOL TÍNH THUẾ NGƯỢC</h1>
+                    <p>Hỗ trợ tính toán nhanh chóng và chính xác</p>
+                </div>
+            </div>
+            <button class="reset-btn" id="resetBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="23 4 23 10 17 10"></polyline>
+                    <polyline points="1 20 1 14 7 14"></polyline>
+                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                </svg>
+                Đặt lại
+            </button>
+        </header>
+
+        <div class="main-layout">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <h3>CHỌN CHỨC NĂNG</h3>
+                    <nav class="nav-menu">
+                        <a href="#section1" class="nav-item active" data-target="1">
+                            <span class="nav-badge badge-blue">1</span>
+                            <div class="nav-text">
+                                <span class="nav-title">Giá chưa thuế &rarr; Giá có thuế</span>
+                                <span class="nav-desc">Tính giá có thuế từ giá chưa thuế</span>
+                            </div>
+                            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                        </a>
+                        <a href="#section2" class="nav-item" data-target="2">
+                            <span class="nav-badge badge-green">2</span>
+                            <div class="nav-text">
+                                <span class="nav-title">Giá đã thuế &rarr; Giá chưa thuế</span>
+                                <span class="nav-desc">Tính giá chưa thuế từ giá đã thuế</span>
+                            </div>
+                            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                        </a>
+                        <a href="#section3" class="nav-item" data-target="3">
+                            <span class="nav-badge badge-orange">3</span>
+                            <div class="nav-text">
+                                <span class="nav-title">Tiền thuế + Thuế suất &rarr; Giá</span>
+                                <span class="nav-desc">Tính giá chưa thuế hoặc giá đã thuế</span>
+                            </div>
+                            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                        </a>
+                    </nav>
+                </div>
+                
+                <div class="sidebar-guide">
+                    <h3>HƯỚNG DẪN SỬ DỤNG</h3>
+                    <ul>
+                        <li>Chọn chức năng cần tính ở bên trái</li>
+                        <li>Nhập các thông tin vào form tương ứng</li>
+                        <li>Kết quả sẽ được hiển thị ngay lập tức</li>
+                    </ul>
+                </div>
+            </aside>
+
+            <!-- Content Area -->
+            <main class="content-area">
+                <!-- Section 1 -->
+                <section id="section1" class="calc-card">
+                    <div class="card-header">
+                        <span class="card-badge badge-blue">1</span>
+                        <div class="card-title">
+                            <h2>Giá chưa thuế &rarr; Giá có thuế</h2>
+                            <p>Nhập giá chưa thuế và thuế suất để tính giá có thuế</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="input-column">
+                            <div class="form-group">
+                                <label>Giá chưa thuế</label>
+                                <div class="input-wrapper">
+                                    <input type="text" id="s1-price" placeholder="1,000,000" autocomplete="off">
+                                    <span class="input-suffix">đ</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Thuế suất (%)</label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="s1-tax" value="10" autocomplete="off">
+                                    <span class="input-suffix">%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="result-box box-blue">
+                            <div class="result-header">KẾT QUẢ</div>
+                            <div class="result-label">Giá có thuế</div>
+                            <div class="result-value text-blue" id="s1-result-val">0 đ</div>
+                            <div class="result-words" id="s1-result-words">(Không đồng)</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 2 -->
+                <section id="section2" class="calc-card">
+                    <div class="card-header">
+                        <span class="card-badge badge-green">2</span>
+                        <div class="card-title">
+                            <h2>Giá đã thuế &rarr; Giá chưa thuế</h2>
+                            <p>Nhập giá đã thuế và thuế suất để tính giá chưa thuế</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="input-column">
+                            <div class="form-group">
+                                <label>Giá đã thuế</label>
+                                <div class="input-wrapper">
+                                    <input type="text" id="s2-price" placeholder="1,100,000" autocomplete="off">
+                                    <span class="input-suffix">đ</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Thuế suất (%)</label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="s2-tax" value="10" autocomplete="off">
+                                    <span class="input-suffix">%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="result-box box-green">
+                            <div class="result-header">KẾT QUẢ</div>
+                            <div class="result-label">Giá chưa thuế</div>
+                            <div class="result-value text-green" id="s2-result-val">0 đ</div>
+                            <div class="result-words" id="s2-result-words">(Không đồng)</div>
+                            
+                            <div class="result-label mt-3">Tiền thuế</div>
+                            <div class="result-sub-value text-dark" id="s2-tax-val">0 đ</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 3 -->
+                <section id="section3" class="calc-card">
+                    <div class="card-header">
+                        <span class="card-badge badge-orange">3</span>
+                        <div class="card-title">
+                            <h2>Tiền thuế + Thuế suất &rarr; Giá chưa thuế hoặc Giá đã thuế</h2>
+                            <p>Nhập tiền thuế và thuế suất để tính giá chưa thuế hoặc giá đã thuế</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="input-column col-3">
+                            <div class="form-group">
+                                <label>Tiền thuế</label>
+                                <div class="input-wrapper">
+                                    <input type="text" id="s3-tax-amount" placeholder="100,000" autocomplete="off">
+                                    <span class="input-suffix">đ</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Thuế suất (%)</label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="s3-tax" value="10" autocomplete="off">
+                                    <span class="input-suffix">%</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Tính</label>
+                                <div class="input-wrapper select-wrapper">
+                                    <select id="s3-mode">
+                                        <option value="gia_da_thue">Giá đã thuế</option>
+                                        <option value="gia_chua_thue">Giá chưa thuế</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="result-box box-orange">
+                            <div class="result-header">KẾT QUẢ</div>
+                            <div class="result-label" id="s3-result-label">Giá đã thuế</div>
+                            <div class="result-value text-orange" id="s3-result-val">0 đ</div>
+                            <div class="result-words" id="s3-result-words">(Không đồng)</div>
+                            
+                            <div class="result-label mt-3" id="s3-sub-label">Giá chưa thuế</div>
+                            <div class="result-sub-value text-dark" id="s3-sub-val">0 đ</div>
+                        </div>
+                    </div>
+                </section>
+                
+                <div class="footer-note">
+                    Lưu ý: Kết quả được làm tròn theo đơn vị đồng (đ).
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
