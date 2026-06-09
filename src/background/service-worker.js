@@ -4,15 +4,71 @@ import { maskSecret, isAllowedDomain } from "../shared/security.js";
 import { ERROR_CODES, ERROR_MESSAGES } from "../shared/constants.js";
 import { logger } from "../shared/logger.js";
 
-// Khởi tạo alarm kiểm tra định kỳ khi extension cài đặt/khởi động
+// Khởi tạo alarm kiểm tra định kỳ và context menus khi cài đặt
 chrome.runtime.onInstalled.addListener(async () => {
   logger.info("ExtensionA installed.");
   await setupPeriodicCheck();
+
+  // Tạo menu chuột phải cho Máy tính thuế VAT
+  chrome.contextMenus.create({
+      id: "calc_vat_10",
+      title: "Tính VAT 10% (Giá chưa thuế -> Giá đã thuế)",
+      contexts: ["selection"]
+  });
+  chrome.contextMenus.create({
+      id: "calc_vat_8",
+      title: "Tính VAT 8% (Giá chưa thuế -> Giá đã thuế)",
+      contexts: ["selection"]
+  });
+  chrome.contextMenus.create({
+      id: "lookup_mst",
+      title: "Tra cứu công ty/MST: '%s'",
+      contexts: ["selection"]
+  });
 });
 
 chrome.runtime.onStartup.addListener(async () => {
   logger.info("ExtensionA starting up.");
   await setupPeriodicCheck();
+
+  // Xóa app state lưu tạm của VAT Calculator khi khởi động trình duyệt
+  chrome.storage.local.remove('vatAppState');
+});
+
+// Lắng nghe click menu chuột phải
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  if (info.menuItemId === "lookup_mst") {
+      const query = encodeURIComponent(info.selectionText.trim());
+      chrome.tabs.create({ url: `https://masothue.com/Search/?q=${query}` });
+      return;
+  }
+
+  const text = info.selectionText;
+  if (text) {
+      let numStr = text.replace(/[^\d,\.]/g, '');
+      let val = parseFloat(numStr.replace(/[\.,]/g, '')); 
+      
+      if (isNaN(val) || val === 0) return;
+      
+      let rate = 0;
+      if (info.menuItemId === "calc_vat_10") rate = 10;
+      else if (info.menuItemId === "calc_vat_8") rate = 8;
+      
+      let vatAmount = val * (rate / 100);
+      let total = val + vatAmount;
+      
+      const fmt = (n) => Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      
+      const message = `Giá gốc: ${fmt(val)} đ\nTiền thuế: ${fmt(vatAmount)} đ\nGiá đã thuế: ${fmt(total)} đ`;
+      
+      chrome.scripting.executeScript({
+          target: { tabId: tab.id },
+          func: (msg) => {
+              alert("Kết quả tính VAT:\n\n" + msg);
+          },
+          args: [message]
+      });
+  }
 });
 
 // Lắng nghe thay đổi cấu hình để cập nhật lại alarm
@@ -60,7 +116,6 @@ async function getZaloCookies() {
   const allowlist = config.allowlist || ["chat.zalo.me", "id.zalo.me"];
   const allCookies = [];
 
-  // Query cho cả domain chính và phụ
   const targets = [
     { domain: "zalo.me" },
     { domain: "chat.zalo.me" },
@@ -79,17 +134,13 @@ async function getZaloCookies() {
     }
   }
 
-  // Lọc chỉ giữ lại cookie thuộc domain trong allowlist và trùng với các key cần capture
   const capturedKeys = ["zpsid", "zpw_sek"];
   const filtered = allCookies.filter(cookie => {
-    // Check allowlist
     const domainOk = isAllowedDomain(cookie.domain, allowlist);
-    // Check key
     const nameOk = capturedKeys.some(key => cookie.name.toLowerCase().includes(key));
     return domainOk && nameOk;
   });
 
-  // Loại bỏ trùng lặp (nếu trùng name và domain)
   const seen = new Set();
   const unique = [];
   for (const cookie of filtered) {
@@ -118,7 +169,6 @@ async function performPeriodicCheck() {
     if (!config.apiUrl) return;
 
     logger.info("Executing periodic check sequence...");
-    // 1. Kiểm tra Backend Health
     const health = await checkBackendHealth();
     if (!health.ok) {
       logger.warn("Periodic check: Backend is offline.");
@@ -126,12 +176,10 @@ async function performPeriodicCheck() {
       return;
     }
 
-    // 2. Lấy dữ liệu phiên
     const cookies = await getZaloCookies();
     const hasSession = cookies.some(c => c.name === "zpsid") && cookies.some(c => c.name === "zpw_sek");
     const sessionStatus = hasSession ? "VALID" : "EXPIRED";
 
-    // 3. Gửi check-session lên backend
     const payload = {
       source: "ExtensionA",
       domain: "chat.zalo.me",
@@ -143,7 +191,6 @@ async function performPeriodicCheck() {
 
     const result = await checkSessionOnBackend(payload);
     
-    // Lưu lại trạng thái
     const statusData = {
       lastCheckedAt: new Date().toISOString(),
       backendOnline: true,
@@ -152,7 +199,6 @@ async function performPeriodicCheck() {
     };
     await saveLastStatus(statusData);
 
-    // 4. Nếu mất phiên và có cấu hình webhook, cảnh báo
     if (!statusData.sessionValid) {
       logger.warn("Periodic check: Session is invalid/expired.");
       await notifyWebhook(`Session EXPIRED/INVALID on domain chat.zalo.me`, config.webhookUrl);
@@ -168,7 +214,7 @@ async function performPeriodicCheck() {
 }
 
 /**
- * Gửi cảnh báo tới Webhook URL (như Discord/Slack/Custom webhook)
+ * Gửi cảnh báo tới Webhook URL
  */
 async function notifyWebhook(message, webhookUrl) {
   if (!webhookUrl) return;
@@ -192,7 +238,6 @@ async function notifyWebhook(message, webhookUrl) {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   logger.debug("Message received in background worker", { message });
 
-  // Handle messages asynchronously by returning true
   const handleMessage = async () => {
     try {
       switch (message.type) {
@@ -240,7 +285,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         }
 
         case "SYNC_SESSION": {
-          // Kiểm tra xem đã đồng ý điều khoản bảo mật chưa
           const consent = await getConsent();
           if (!consent) {
             sendResponse({
@@ -253,7 +297,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             return;
           }
 
-          // Lấy cookie đầy đủ
           const cookies = await getZaloCookies();
           const zpsid = cookies.find(c => c.name === "zpsid")?.value || "";
           const zpw_sek = cookies.find(c => c.name === "zpw_sek")?.value || "";
@@ -276,13 +319,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             userAgent: navigator.userAgent,
             consentConfirmed: true,
             sessionData: {
-              cookies: cookies // Gửi danh sách cookie cấu trúc hoàn chỉnh
+              cookies: cookies
             }
           };
 
           const res = await syncSessionToBackend(payload);
           if (res.ok) {
-            // Lưu trạng thái kiểm tra cuối cùng
             await saveLastStatus({
               lastCheckedAt: new Date().toISOString(),
               backendOnline: true,
@@ -290,7 +332,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
               errorMsg: ""
             });
             
-            // Ghi nhận sự kiện đồng bộ thành công
             await logEventToBackend({
               event: "SESSION_SYNC_SUCCESS",
               message: "Đồng bộ session thủ công thành công từ Extension.",
@@ -329,5 +370,5 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   };
 
   handleMessage();
-  return true; // Giữ kết nối để sendResponse chạy bất đồng bộ
+  return true;
 });

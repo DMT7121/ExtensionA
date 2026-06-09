@@ -25,7 +25,10 @@
   },
   "permissions": [
     "storage",
-    "cookies"
+    "cookies",
+    "contextMenus",
+    "scripting",
+    "activeTab"
   ],
   "host_permissions": [
     "https://chat.zalo.me/*",
