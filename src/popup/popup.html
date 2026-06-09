@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ExtensionA - KING's GRILL</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-main">
+        <div class="logo-circle">KG</div>
+        <div>
+          <h1 class="title">ExtensionA - KING's GRILL</h1>
+          <p class="subtitle">Công cụ quản trị phiên & đồng bộ bot nội bộ</p>
+        </div>
+      </div>
+      <button id="open-settings-btn" class="settings-icon-btn" title="Cài đặt hệ thống">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      </button>
+    </header>
+
+    <!-- Trạng thái -->
+    <main class="main-content">
+      <section class="status-panel">
+        <div class="status-row">
+          <span class="status-label">Trạng thái Extension:</span>
+          <span id="ext-status-badge" class="badge badge-warning">Chưa cấu hình</span>
+        </div>
+        <div class="status-row">
+          <span class="status-label">Kết nối Backend:</span>
+          <span id="backend-status-badge" class="badge badge-secondary">Chưa kiểm tra</span>
+        </div>
+        <div class="status-row">
+          <span class="status-label">Phiên làm việc (Session):</span>
+          <span id="session-status-badge" class="badge badge-secondary">Chưa kiểm tra</span>
+        </div>
+      </section>
+
+      <!-- Session Preview (Masked) -->
+      <section class="preview-panel" id="preview-panel" style="display: none;">
+        <h3 class="panel-title">Chi tiết phiên (Đã mã hóa bảo mật)</h3>
+        <div class="preview-row">
+          <span class="preview-key">zpsid:</span>
+          <span id="zpsid-preview" class="preview-val">Chưa phát hiện</span>
+        </div>
+        <div class="preview-row">
+          <span class="preview-key">zpw_sek:</span>
+          <span id="zpw-sek-preview" class="preview-val">Chưa phát hiện</span>
+        </div>
+      </section>
+
+      <!-- Security Consent Box -->
+      <section id="consent-card" class="consent-card" style="display: none;">
+        <div class="consent-header">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="warning-icon"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          <h4>CẢNH BÁO BẢO MẬT BẮT BUỘC</h4>
+        </div>
+        <p class="consent-text" id="consent-warning-text"></p>
+        <label class="consent-checkbox-label">
+          <input type="checkbox" id="consent-checkbox">
+          Tôi đã hiểu rủi ro và xác nhận đồng ý gửi session.
+        </label>
+      </section>
+
+      <!-- Actions -->
+      <section class="actions-panel">
+        <div class="btn-grid">
+          <button id="btn-check-backend" class="btn btn-secondary">Kiểm tra Backend</button>
+          <button id="btn-check-session" class="btn btn-secondary">Kiểm tra phiên</button>
+        </div>
+        <button id="btn-sync-session" class="btn btn-primary" style="margin-top: 10px; width: 100%;">
+          Đồng bộ cấu hình & Phiên
+        </button>
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
+          <button id="btn-open-options" class="btn btn-outline" style="flex: 1;">Mở Cấu hình</button>
+          <button id="btn-clear-data" class="btn btn-outline-danger" style="flex: 1;">Xóa dữ liệu</button>
+        </div>
+      </section>
+
+      <!-- Logs -->
+      <section class="logs-panel">
+        <h3 class="panel-title">Nhật ký hoạt động</h3>
+        <div id="logs-box" class="logs-box">
+          <div class="log-line info">Chờ kiểm tra trạng thái...</div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <span>KING's GRILL Automation System</span>
+    </footer>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast">
+    <span id="toast-message">Đã sao chép!</span>
+  </div>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cấu hình ExtensionA - KING's GRILL</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="header-logo-section">
+        <div class="logo-box">KG</div>
+        <div>
+          <h1 class="header-title">ExtensionA Settings</h1>
+          <p class="header-subtitle">Hệ thống Quản trị Phiên & Cảnh báo nội bộ • KING's GRILL</p>
+        </div>
+      </div>
+      <div class="version">v3.0.0</div>
+    </header>
+
+    <main class="main-content">
+      <!-- Cấu hình API -->
+      <section class="card">
+        <div class="card-header">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+          <h2>Cấu hình Kết nối Backend</h2>
+        </div>
+        
+        <div class="form-group">
+          <label for="api-url" class="label-text">Backend API URL</label>
+          <div class="input-wrapper">
+            <input type="url" id="api-url" class="custom-input" placeholder="Ví dụ: https://api.kingsgrill.vn" required>
+          </div>
+          <p class="input-hint">Đường dẫn API chính thức hoặc URL localhost thử nghiệm (http://localhost:3000).</p>
+        </div>
+
+        <div class="form-group">
+          <label for="admin-token" class="label-text">Admin Token / API Key</label>
+          <div class="input-wrapper password-container">
+            <input type="password" id="admin-token" class="custom-input" placeholder="Nhập API Key hoặc Token admin...">
+            <button type="button" id="toggle-token-btn" class="toggle-password-btn" title="Hiển thị/Ẩn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </button>
+          </div>
+          <p class="input-hint">Mã xác thực gửi trong Header Authorization Bearer để ghi dữ liệu.</p>
+        </div>
+
+        <div class="test-row">
+          <button id="test-connection-btn" class="btn btn-secondary">
+            <span class="spinner" id="test-spinner" style="display: none;"></span>
+            Kiểm tra kết nối Backend
+          </button>
+          <span id="test-result-status" class="test-status"></span>
+        </div>
+      </section>
+
+      <!-- Quy tắc Đồng bộ & Vận hành -->
+      <section class="card">
+        <div class="card-header">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+          <h2>Quy tắc Đồng bộ & Giám sát</h2>
+        </div>
+
+        <div class="form-group">
+          <label for="sync-mode" class="label-text">Chế độ hoạt động</label>
+          <select id="sync-mode" class="custom-select">
+            <option value="local">Chỉ kiểm tra cục bộ (Không tự động gửi)</option>
+            <option value="confirm">Cho phép đồng bộ sau khi người dùng xác nhận</option>
+            <option value="disabled">Tắt đồng bộ hoàn toàn (Ngăn chặn mọi kết nối gửi ra)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="allowlist" class="label-text">Domain Allowlist (Phân tách bằng dấu phẩy)</label>
+          <input type="text" id="allowlist" class="custom-input" placeholder="chat.zalo.me, id.zalo.me">
+          <p class="input-hint">Chỉ thu thập session cookie từ các tên miền có trong danh sách được phép này.</p>
+        </div>
+
+        <div class="form-group">
+          <label for="webhook-url" class="label-text">Webhook Cảnh báo Mất phiên (Discord / Slack)</label>
+          <input type="url" id="webhook-url" class="custom-input" placeholder="https://discord.com/api/webhooks/...">
+          <p class="input-hint">Tự động đẩy thông báo cảnh báo về phòng điều hành khi có sự cố phiên xảy ra.</p>
+        </div>
+
+        <div class="row-2-col">
+          <div class="form-group">
+            <label for="check-interval" class="label-text">Chu kỳ kiểm tra tự động (Phút)</label>
+            <input type="number" id="check-interval" class="custom-input" min="5" max="1440" value="60">
+          </div>
+          <div class="form-group checkbox-group">
+            <label class="checkbox-container">
+              <input type="checkbox" id="debug-mode">
+              <span class="checkmark"></span>
+              Bật chế độ Debug (Ghi log chi tiết)
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- Hành động hệ thống -->
+      <div class="actions-container">
+        <button id="save-btn" class="btn btn-primary">Lưu cấu hình</button>
+        <button id="reset-btn" class="btn btn-secondary-danger">Khôi phục mặc định</button>
+        <button id="clear-all-btn" class="btn btn-danger">Xóa toàn bộ dữ liệu Local</button>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p>KING's GRILL Automation Systems • Tài liệu nội bộ nghiêm cấm sao chép</p>
+    </footer>
+  </div>
+
+  <!-- Toast Toast -->
+  <div id="toast" class="toast">
+    <span id="toast-message">Đang xử lý...</span>
+  </div>
+
+  <script type="module" src="options.js"></script>
+</body>
+</html>

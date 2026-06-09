@@ -1,30 +1,34 @@
 {
   "manifest_version": 3,
-  "name": "Máy tính thuế VAT",
-  "version": "2.1",
-  "description": "Tiện ích tính toán thuế VAT nhanh chóng, tích hợp đọc số thành chữ, tra cứu MST và lịch sử tính toán.",
-  "action": {
-    "default_popup": "popup.html",
-    "default_title": "Máy tính thuế VAT",
-    "default_icon": "icon.png"
-  },
+  "name": "ExtensionA - KING's GRILL",
+  "version": "3.0.0",
+  "description": "Công cụ quản trị phiên và đồng bộ bot nội bộ cho KING's GRILL",
   "icons": {
-    "16": "icon.png",
-    "32": "icon.png",
-    "48": "icon.png",
-    "128": "icon.png"
+    "16": "assets/icons/icon16.png",
+    "32": "assets/icons/icon32.png",
+    "48": "assets/icons/icon48.png",
+    "128": "assets/icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_icon": {
+      "16": "assets/icons/icon16.png",
+      "32": "assets/icons/icon32.png",
+      "48": "assets/icons/icon48.png",
+      "128": "assets/icons/icon128.png"
+    }
+  },
+  "options_page": "src/options/options.html",
+  "background": {
+    "service_worker": "src/background/service-worker.js",
+    "type": "module"
   },
   "permissions": [
     "storage",
-    "contextMenus",
-    "scripting",
-    "activeTab"
+    "cookies"
   ],
   "host_permissions": [
-    "https://api.vietqr.io/*",
-    "https://api.exchangerate-api.com/*"
-  ],
-  "background": {
-    "service_worker": "background.js"
-  }
+    "https://chat.zalo.me/*",
+    "https://id.zalo.me/*"
+  ]
 }
